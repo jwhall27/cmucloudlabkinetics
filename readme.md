@@ -1,6 +1,6 @@
 # CMU Cloud Lab Kinetics (Honors Thesis, Chapter 3)
 
-This repository contains TAML/Orange II oxidation kinetics experiment protocols as run in the CMU Cloud Lab.
+This repository contains oxidation kinetics experiment protocols as run in the CMU Cloud Lab.
 
 All code is written in Symbolic Lab Language.
 
