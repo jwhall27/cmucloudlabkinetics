@@ -1,0 +1,303 @@
+TAML Kinetics JH5-1
+Manual preparation of injection samples (peroxide dilution x2, catalyst dilution)
+In[1]:= manualInputPrep = ExperimentManualSamplePreparation[
+	{
+		LabelContainer[
+			<|
+				Label -> {"PeroxideTube", "OtherPeroxideTube", "CatalystTube"},
+				Container -> {Model[Container, Vessel, "2mL Tube"], Model[Container, Vessel, "2mL Tube"], Model[Container, Vessel, "2mL Tube"]}
+			|>
+		],
+		Transfer[
+			<|
+				Source -> {
+					Model[Sample, StockSolution, "0.125mM NT-7 Catalyst 01-29-25"],
+					Model[Sample, "Milli-Q water"],
+					Model[Sample, "Hydrogen peroxide solution contains inhibitor, 30wt. % in H2O, ACS reagent | H2O2"],
+					Model[Sample, "Milli-Q water"],
+					"PeroxideTube"
+				},
+				Destination -> {"CatalystTube", "CatalystTube", "PeroxideTube", "PeroxideTube", "OtherPeroxideTube"},
+				Amount -> {
+					Quantity[30, "Microliters"],
+					Quantity[1470, "Microliters"],
+					Quantity[18, "Microliters"],
+					Quantity[1782, "Microliters"],
+					Quantity[400, "Microliters"]
+				},
+				SourceLabel -> {"transfer source sample 1", "transfer source sample 2", "transfer source sample 3", "transfer source sample 4", "transfer source sample 5"},
+				SourceContainerLabel -> {
+					"transfer source container 1", "transfer source container 2", "transfer source container 3", "transfer source container 4",
+					"PeroxideTube"
+				},
+				DestinationLabel -> {"Catalyst", "Catalyst", "Peroxide", "Peroxide", "OtherPeroxide"},
+				DestinationContainerLabel -> {"CatalystTube", "CatalystTube", "PeroxideTube", "PeroxideTube", "OtherPeroxideTube"},
+				SourceWell -> "A1", DestinationWell -> "A1",
+				DispenseMix -> True, KeepSourceCovered -> True, KeepDestinationCovered -> True,
+				Preparation -> Manual, MeasureWeight -> False, MeasureVolume -> False, ImageSample -> False
+			|>
+		]
+	},
+	ParentProtocol -> Null, ImageSample -> False, MeasureVolume -> False, MeasureWeight -> False, Site -> Object[Container,Site,"ECL-CMU"]
+];
+In[2]:= RestrictLabeledSamples[Join[Part[Download[manualInputPrep, LabeledObjects], All, 2]]];
+RoboticSamplePreparation -- Preparing sample plate + running AbsorbanceKinetics w/ Catalyst and Peroxide injections
+In[3]:= roboticKinetics = ExperimentRoboticSamplePreparation[
+	{
+		LabelContainer[
+			<|
+				Label -> {"KinPlate"},
+				Container -> {Model[Container, Plate, "id:n0k9mGzRaaBn"]}
+			|>
+		],
+		Transfer[
+			<|
+				Source -> Flatten[{
+					ConstantArray[Model[Sample, StockSolution, "10mM Phosphate Buffer, pH 7 01-29-25"], 49],
+					ConstantArray[Model[Sample, StockSolution, "1.25mM Orange II Dye 01-29-25"], 49],
+					ConstantArray[Model[Sample, StockSolution, "10mM Phosphate Buffer, pH 7 01-29-25"], 49],
+					Download[Download[manualInputPrep, OutputUnitOperations[[2]]], Field[DestinationSample[[5]]]],
+					Model[Sample,"Milli-Q water"],
+					Model[Sample, StockSolution, "10mM Phosphate Buffer, pH 7 01-29-25"],
+					Model[Sample, StockSolution, "0.125mM NT-7 Catalyst 01-29-25"],
+					Model[Sample, "Milli-Q water"]
+				}],
+				Destination -> Join[
+					ConstantArray["KinPlate",(49 + 49 + 49)], 
+					{{"H1", "KinPlate"}, {"H1", "KinPlate"}, {"H2", "KinPlate"}, {"H2", "KinPlate"}, {"H3", "KinPlate"}}
+				],
+				Amount -> {
+					Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"],
+					Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"],
+					Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"],
+					Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"],
+					Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"],
+					Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"],
+					Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"], Quantity[200, "Microliters"],
+					
+					Quantity[3, "Microliters"], Quantity[3, "Microliters"], Quantity[3, "Microliters"], Quantity[3, "Microliters"], Quantity[3, "Microliters"], Quantity[3, "Microliters"], Quantity[3, "Microliters"],
+					Quantity[5, "Microliters"], Quantity[5, "Microliters"], Quantity[5, "Microliters"], Quantity[5, "Microliters"], Quantity[5, "Microliters"], Quantity[5, "Microliters"], Quantity[5, "Microliters"],
+					Quantity[6, "Microliters"], Quantity[6, "Microliters"], Quantity[6, "Microliters"], Quantity[6, "Microliters"], Quantity[6, "Microliters"], Quantity[6, "Microliters"], Quantity[6, "Microliters"],
+					Quantity[7, "Microliters"], Quantity[7, "Microliters"], Quantity[7, "Microliters"], Quantity[7, "Microliters"], Quantity[7, "Microliters"], Quantity[7, "Microliters"], Quantity[7, "Microliters"],
+					Quantity[8, "Microliters"], Quantity[8, "Microliters"], Quantity[8, "Microliters"], Quantity[8, "Microliters"], Quantity[8, "Microliters"], Quantity[8, "Microliters"], Quantity[8, "Microliters"],
+					Quantity[9, "Microliters"], Quantity[9, "Microliters"], Quantity[9, "Microliters"], Quantity[9, "Microliters"], Quantity[9, "Microliters"], Quantity[9, "Microliters"], Quantity[9, "Microliters"],
+					Quantity[10, "Microliters"], Quantity[10, "Microliters"], Quantity[10, "Microliters"], Quantity[10, "Microliters"], Quantity[10, "Microliters"], Quantity[10, "Microliters"], Quantity[10, "Microliters"],
+					
+					Quantity[39, "Microliters"], Quantity[37, "Microliters"], Quantity[36, "Microliters"], Quantity[35, "Microliters"], Quantity[34, "Microliters"], Quantity[33, "Microliters"], Quantity[32, "Microliters"],
+					Quantity[38, "Microliters"], Quantity[36, "Microliters"], Quantity[35, "Microliters"], Quantity[34, "Microliters"], Quantity[33, "Microliters"], Quantity[32, "Microliters"], Quantity[31, "Microliters"],
+					Quantity[37, "Microliters"], Quantity[35, "Microliters"], Quantity[34, "Microliters"], Quantity[33, "Microliters"], Quantity[32, "Microliters"], Quantity[31, "Microliters"], Quantity[30, "Microliters"],
+					Quantity[35, "Microliters"], Quantity[33, "Microliters"], Quantity[32, "Microliters"], Quantity[31, "Microliters"], Quantity[30, "Microliters"], Quantity[29, "Microliters"], Quantity[28, "Microliters"],
+					Quantity[33, "Microliters"], Quantity[31, "Microliters"], Quantity[30, "Microliters"], Quantity[29, "Microliters"], Quantity[28, "Microliters"], Quantity[27, "Microliters"], Quantity[26, "Microliters"],
+					Quantity[31, "Microliters"], Quantity[29, "Microliters"], Quantity[28, "Microliters"], Quantity[27, "Microliters"], Quantity[26, "Microliters"], Quantity[25, "Microliters"], Quantity[24, "Microliters"],
+					Quantity[29, "Microliters"], Quantity[27, "Microliters"], Quantity[26, "Microliters"], Quantity[25, "Microliters"], Quantity[24, "Microliters"], Quantity[23, "Microliters"], Quantity[22, "Microliters"],
+					
+					Quantity[125, "Microliters"], Quantity[125, "Microliters"],
+					Quantity[249, "Microliters"], Quantity[1, "Microliters"],
+					Quantity[250, "Microliters"]
+				},
+				DestinationWell -> {
+					"A1", "B1", "C1", "D1", "E1", "F1", "G1", 
+					"A2", "B2", "C2", "D2", "E2", "F2", "G2", 
+					"A3", "B3", "C3", "D3", "E3", "F3", "G3", 
+					"A4", "B4", "C4", "D4", "E4", "F4", "G4", 
+					"A5", "B5", "C5", "D5", "E5", "F5", "G5", 
+					"A6", "B6", "C6", "D6", "E6", "F6", "G6", 
+					"A7", "B7", "C7", "D7", "E7", "F7", "G7", 
+					
+					"A1", "B1", "C1", "D1", "E1", "F1", "G1",
+					"A2", "B2", "C2", "D2", "E2", "F2", "G2", 
+					"A3", "B3", "C3", "D3", "E3", "F3", "G3", 
+					"A4", "B4", "C4", "D4", "E4", "F4", "G4", 
+					"A5", "B5", "C5", "D5", "E5", "F5", "G5",
+					"A6", "B6", "C6", "D6", "E6", "F6", "G6", 
+					"A7", "B7", "C7", "D7", "E7", "F7", "G7", 
+					
+					"A1", "B1", "C1", "D1", "E1", "F1", "G1", 
+					"A2", "B2", "C2", "D2", "E2", "F2", "G2", 
+					"A3", "B3", "C3", "D3", "E3", "F3", "G3", 
+					"A4", "B4", "C4", "D4", "E4", "F4", "G4", 
+					"A5", "B5", "C5", "D5", "E5", "F5", "G5", 
+					"A6", "B6", "C6", "D6", "E6", "F6", "G6", 
+					"A7", "B7", "C7", "D7", "E7", "F7", "G7", 
+					
+					Automatic, Automatic,
+					Automatic, Automatic,
+					Automatic
+				},
+				DestinationLabel -> {
+					"transfer destination sample 1", "transfer destination sample 2", "transfer destination sample 3",
+					"transfer destination sample 4", "transfer destination sample 5", "transfer destination sample 6",
+					"transfer destination sample 7", "transfer destination sample 8", "transfer destination sample 9",
+					"transfer destination sample 10", "transfer destination sample 11", "transfer destination sample 12",
+					"transfer destination sample 13", "transfer destination sample 14", "transfer destination sample 15",
+					"transfer destination sample 16", "transfer destination sample 17", "transfer destination sample 18",
+					"transfer destination sample 19", "transfer destination sample 20", "transfer destination sample 21",
+					"transfer destination sample 22", "transfer destination sample 23", "transfer destination sample 24",
+					"transfer destination sample 25", "transfer destination sample 26", "transfer destination sample 27",
+					"transfer destination sample 28", "transfer destination sample 29", "transfer destination sample 30",
+					"transfer destination sample 31", "transfer destination sample 32", "transfer destination sample 33",
+					"transfer destination sample 34", "transfer destination sample 35", "transfer destination sample 36",
+					"transfer destination sample 37", "transfer destination sample 38", "transfer destination sample 39",
+					"transfer destination sample 40", "transfer destination sample 41", "transfer destination sample 42",
+					"transfer destination sample 43", "transfer destination sample 44", "transfer destination sample 45",
+					"transfer destination sample 46", "transfer destination sample 47", "transfer destination sample 48",
+					"transfer destination sample 49",
+					
+					"transfer destination sample 1", "transfer destination sample 2", "transfer destination sample 3",
+					"transfer destination sample 4", "transfer destination sample 5", "transfer destination sample 6",
+					"transfer destination sample 7", "transfer destination sample 8", "transfer destination sample 9",
+					"transfer destination sample 10", "transfer destination sample 11", "transfer destination sample 12",
+					"transfer destination sample 13", "transfer destination sample 14", "transfer destination sample 15",
+					"transfer destination sample 16", "transfer destination sample 17", "transfer destination sample 18",
+					"transfer destination sample 19", "transfer destination sample 20", "transfer destination sample 21",
+					"transfer destination sample 22", "transfer destination sample 23", "transfer destination sample 24",
+					"transfer destination sample 25", "transfer destination sample 26", "transfer destination sample 27",
+					"transfer destination sample 28", "transfer destination sample 29", "transfer destination sample 30",
+					"transfer destination sample 31", "transfer destination sample 32", "transfer destination sample 33",
+					"transfer destination sample 34", "transfer destination sample 35", "transfer destination sample 36",
+					"transfer destination sample 37", "transfer destination sample 38", "transfer destination sample 39",
+					"transfer destination sample 40", "transfer destination sample 41", "transfer destination sample 42",
+					"transfer destination sample 43", "transfer destination sample 44", "transfer destination sample 45",
+					"transfer destination sample 46", "transfer destination sample 47", "transfer destination sample 48",
+					"transfer destination sample 49",
+					
+					"transfer destination sample 1", "transfer destination sample 2",
+					"transfer destination sample 3", "transfer destination sample 4", "transfer destination sample 5",
+					"transfer destination sample 6", "transfer destination sample 7", "transfer destination sample 8",
+					"transfer destination sample 9", "transfer destination sample 10", "transfer destination sample 11",
+					"transfer destination sample 12", "transfer destination sample 13", "transfer destination sample 14",
+					"transfer destination sample 15", "transfer destination sample 16", "transfer destination sample 17",
+					"transfer destination sample 18", "transfer destination sample 19", "transfer destination sample 20",
+					"transfer destination sample 21", "transfer destination sample 22", "transfer destination sample 23",
+					"transfer destination sample 24", "transfer destination sample 25", "transfer destination sample 26",
+					"transfer destination sample 27", "transfer destination sample 28", "transfer destination sample 29",
+					"transfer destination sample 30", "transfer destination sample 31", "transfer destination sample 32",
+					"transfer destination sample 33", "transfer destination sample 34", "transfer destination sample 35",
+					"transfer destination sample 36", "transfer destination sample 37", "transfer destination sample 38",
+					"transfer destination sample 39", "transfer destination sample 40", "transfer destination sample 41",
+					"transfer destination sample 42", "transfer destination sample 43", "transfer destination sample 44",
+					"transfer destination sample 45", "transfer destination sample 46", "transfer destination sample 47",
+					"transfer destination sample 48", "transfer destination sample 49",
+					
+					"PeroxideCheck", "PeroxideCheck",
+					"Blank", "Blank", 
+					"WaterBlank"
+				},
+				DispenseMix -> {
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					Automatic, Automatic, Automatic, Automatic, Automatic, Automatic, Automatic,
+					
+					True, True, True, True, True, True, True,
+					True, True, True, True, True, True, True,
+					True, True, True, True, True, True, True,
+					True, True, True, True, True, True, True,
+					True, True, True, True, True, True, True,
+					True, True, True, True, True, True, True,
+					True, True, True, True, True, True, True, 
+					
+					Automatic, Automatic,
+					Automatic, Automatic,
+					Automatic
+				}
+			|>
+		],
+		AbsorbanceKinetics[
+			<|
+				Sample -> {
+					"transfer destination sample 1", "transfer destination sample 8", "transfer destination sample 15",
+					"transfer destination sample 22", "transfer destination sample 29", "transfer destination sample 36",
+					"transfer destination sample 43", "transfer destination sample 2", "transfer destination sample 9",
+					"transfer destination sample 16", "transfer destination sample 23", "transfer destination sample 30",
+					"transfer destination sample 37", "transfer destination sample 44", "transfer destination sample 3",
+					"transfer destination sample 10", "transfer destination sample 17", "transfer destination sample 24",
+					"transfer destination sample 31", "transfer destination sample 38", "transfer destination sample 45",
+					"transfer destination sample 4", "transfer destination sample 11", "transfer destination sample 18",
+					"transfer destination sample 25", "transfer destination sample 32", "transfer destination sample 39",
+					"transfer destination sample 46", "transfer destination sample 5", "transfer destination sample 12",
+					"transfer destination sample 19", "transfer destination sample 26", "transfer destination sample 33",
+					"transfer destination sample 40", "transfer destination sample 47", "transfer destination sample 6",
+					"transfer destination sample 13", "transfer destination sample 20", "transfer destination sample 27",
+					"transfer destination sample 34", "transfer destination sample 41", "transfer destination sample 48",
+					"transfer destination sample 7", "transfer destination sample 14", "transfer destination sample 21",
+					"transfer destination sample 28", "transfer destination sample 35", "transfer destination sample 42",
+					"transfer destination sample 49", "PeroxideCheck"
+				},
+				PrimaryInjectionSample -> Join[
+					{Null, Null, Null, Null, Null, Null, Null}, 
+					ConstantArray[Download[Download[manualInputPrep, Part[OutputUnitOperations, 2]], Field[DestinationSample[[1]]]], 42], 
+					{Null}
+				],
+				PrimaryInjectionVolume -> {
+					Null, Null, Null, Null, Null, Null, Null,
+					1 Microliter, 1 Microliter, 1 Microliter, 1 Microliter, 1 Microliter, 1 Microliter, 1 Microliter,
+					2 Microliter, 2 Microliter, 2 Microliter, 2 Microliter, 2 Microliter, 2 Microliter, 2 Microliter,
+					4 Microliter, 4 Microliter, 4 Microliter, 4 Microliter, 4 Microliter, 4 Microliter, 4 Microliter,
+					6 Microliter, 6 Microliter, 6 Microliter, 6 Microliter, 6 Microliter, 6 Microliter, 6 Microliter,
+					8 Microliter, 8 Microliter, 8 Microliter, 8 Microliter, 8 Microliter, 8 Microliter, 8 Microliter,
+					10 Microliter, 10 Microliter, 10 Microliter, 10 Microliter, 10 Microliter, 10 Microliter, 10 Microliter,
+					Null
+				},
+				SecondaryInjectionSample -> Join[
+					ConstantArray[Download[Download[manualInputPrep, Part[OutputUnitOperations, 2]], Field[DestinationSample[[3]]]], 49], 
+					{Null}
+				],
+				SecondaryInjectionVolume -> Join[
+					ConstantArray[Quantity[8, "Microliters"], 49], 
+					{Null}
+				],
+				Blanks -> {
+					"Blank", "Blank", "Blank", "Blank", "Blank", "Blank", "Blank", 
+					"Blank", "Blank", "Blank", "Blank", "Blank", "Blank", "Blank", 
+					"Blank", "Blank", "Blank", "Blank", "Blank", "Blank", "Blank", 
+					"Blank", "Blank", "Blank", "Blank", "Blank", "Blank", "Blank", 
+					"Blank", "Blank", "Blank", "Blank", "Blank", "Blank", "Blank", 
+					"Blank", "Blank", "Blank", "Blank", "Blank", "Blank", "Blank", 
+					"Blank", "Blank", "Blank", "Blank", "Blank", "Blank", "Blank", 
+					"WaterBlank"
+				},
+				PlateReaderMix -> True,
+				PlateReaderMixSchedule -> AfterInjections,
+				PlateReaderMixTime -> Quantity[5, "Seconds"],
+				PlateReaderMixRate -> Quantity[100, "Revolutions" / "Minutes"],
+				RunTime -> Quantity[65, "Minutes"],
+				Wavelength -> {
+					Quantity[240, "Nanometers"],
+					Quantity[350, "Nanometers"],
+					Quantity[485, "Nanometers"]
+				},
+				PrimaryInjectionTime -> Quantity[1, "Minutes"],
+				SecondaryInjectionTime -> Quantity[5, "Minutes"],
+				Instrument -> Model[Instrument, PlateReader, "CLARIOstar"], 
+				NumberOfReadings -> 10, 
+				ReadDirection -> SerpentineRow
+			|>
+		],
+		Cover[<|Sample -> {"KinPlate"}, Preparation -> Robotic|>]
+	},
+	ParentProtocol -> Null, ImageSample -> True, MeasureVolume -> True, MeasureWeight -> True, Site -> Object[Container, Site, "ECL-CMU"]
+];
+In[4]:= UnrestrictLabeledSamples[
+	Join[
+		Part[
+			Download[manualInputPrep, LabeledObjects],
+			All, 2
+		],
+		Part[
+			Download[roboticKinetics, LabeledObjects],
+			All, 2
+		]
+	]
+]
