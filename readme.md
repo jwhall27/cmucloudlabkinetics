@@ -6,12 +6,18 @@ All code is written in Symbolic Lab Language.
 
 ## Manual Intervention Method
 
-link
+[Mathematica Notebook (.nb)](https://github.com/jwhall27/cmucloudlabkinetics/blob/main/Manual%20Intervention%20Protocol.nb)
+
+[Plain Text (.txt)](https://github.com/jwhall27/cmucloudlabkinetics/blob/main/Manual%20Intervention%20Protocol.txt)
 
 ## Robotic Execution Method
 
-link
+[Mathematica Notebook (.nb)](https://github.com/jwhall27/cmucloudlabkinetics/blob/main/Robotic%20Execution%20Protocol.nb)
+
+[Plain Text (.txt)](https://github.com/jwhall27/cmucloudlabkinetics/blob/main/Robotic%20Execution%20Protocol.txt)
 
 ## Incomplete Bleaching (Robotic Execution)
 
-link
+[Mathematica Notebook (.nb)](https://github.com/jwhall27/cmucloudlabkinetics/blob/main/Incomplete%20Bleaching%20(Robotic%20Execution).nb)
+
+[Plain Text (.txt)](https://github.com/jwhall27/cmucloudlabkinetics/blob/main/Incomplete%20Bleaching%20(Robotic%20Execution).txt)
